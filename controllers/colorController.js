@@ -10,3 +10,13 @@ exports.fetchRandomColorScheme = async (req, res) => {
     res.status(500);
   }
 }
+
+exports.fetchColorScheme = async (req, res) => {
+  try {
+    const scheme = await axios(`${BASE_URL}/palettes?format=json&sortBy=DESC&hex=${req.params.hex}&hex_logic=${req.params.hex_logic}`);
+    res.json(scheme.data[0].colors);
+  } catch (error) {
+    console.error(error);
+    res.status(500);
+  }
+}
