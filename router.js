@@ -3,6 +3,6 @@ const { fetchRandomColorScheme, fetchColorScheme } = require('./controllers/colo
 const router = Router();
 
 router.get('/getRandomScheme', fetchRandomColorScheme);
-router.get('/getScheme/:hex/:hex_logic', fetchColorScheme);
+router.get('/getScheme/:hex/:hex_logic/:index', fetchColorScheme);
 
 module.exports = router;
