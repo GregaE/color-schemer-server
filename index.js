@@ -1,6 +1,7 @@
 const Express = require('express');
 const router = require('./router');
 const cors = require('cors');
+const db = require('./model/dbAccess.js');
 
 const app = Express();
 const PORT = (process.env.PORT || 8889);
