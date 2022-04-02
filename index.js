@@ -8,7 +8,7 @@ const PORT = (process.env.PORT || 8889);
 
 app
 	.use(cors())
-	.use(Express.text())
+	.use(Express.json())
 	.use(router)
 
 app.listen(PORT, () => {

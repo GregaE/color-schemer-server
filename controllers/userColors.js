@@ -2,9 +2,8 @@ const User = require('../model/userSchema.js');
 
 exports.createUser = async (req, res) => {
   try {
-    const {username} = req.body;
-    console.log(req.body)
-    const user = await User.create({username: username, colorSchemes: []})
+    const { username } = req.body;
+    const user = await User.create({ username: username, colorSchemes: [] });
     res.send(user)
     res.status(200);
   } catch (error) {
@@ -15,6 +14,8 @@ exports.createUser = async (req, res) => {
 
 exports.fetchUserSchemes = async (req, res) => {
   try {
+    const user = await User.findOne({ _id: req.params.user_id });
+    res.send(user.colorSchemes)
     res.status(200);
   } catch (error) {
     console.error(error);
@@ -22,8 +23,22 @@ exports.fetchUserSchemes = async (req, res) => {
   }
 }
 
-exports.renameScheme = async (req, res) => {
+
+exports.createScheme = async (req, res) => {
   try {
+    const scheme = req.body;
+    const user = await User.findOneAndUpdate({ _id: req.params.user_id }, {
+      $push: {
+        "colorSchemes": {
+          name: scheme.name,
+          colors: scheme.colors
+        }
+      },
+    },
+    {
+      new: true
+    })
+    res.send(user)
     res.status(200);
   } catch (error) {
     console.error(error);
@@ -31,8 +46,37 @@ exports.renameScheme = async (req, res) => {
   }
 }
 
-exports.createScheme = async (req, res) => {
+exports.renameScheme = async (req, res) => {
   try {
+    const { name, newName } = req.body;
+    const user = await User.updateOne({ _id: req.params.user_id, 'colorSchemes.name': name }, {
+      $set: {
+        'colorSchemes.$.name': newName,
+      },
+    },
+    {
+      new: true
+    })
+    res.send(user)
+    res.status(200);
+  } catch (error) {
+    console.error(error);
+    res.status(500);
+  }
+}
+
+exports.deleteScheme = async (req, res) => {
+  try {
+    const { name } = req.body;
+    const user = await User.updateOne({
+      "_id": req.params.user_id
+    },
+    {
+      $pull: {
+        colorSchemes: { name: name }
+      }
+    });
+    res.send(user)
     res.status(200);
   } catch (error) {
     console.error(error);
