@@ -48,8 +48,8 @@ exports.createScheme = async (req, res) => {
 
 exports.renameScheme = async (req, res) => {
   try {
-    const { name, newName } = req.body;
-    const user = await User.updateOne({ _id: req.params.user_id, 'colorSchemes.name': name }, {
+    const { id, newName } = req.body;
+    const user = await User.updateOne({ _id: req.params.user_id, 'colorSchemes._id': id }, {
       $set: {
         'colorSchemes.$.name': newName,
       },
@@ -67,13 +67,13 @@ exports.renameScheme = async (req, res) => {
 
 exports.deleteScheme = async (req, res) => {
   try {
-    const { name } = req.body;
+    const { id } = req.body;
     const user = await User.updateOne({
       "_id": req.params.user_id
     },
     {
       $pull: {
-        colorSchemes: { name: name }
+        colorSchemes: { _id: id }
       }
     });
     res.send(user)
